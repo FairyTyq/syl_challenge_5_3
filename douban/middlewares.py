@@ -4,7 +4,7 @@
 #
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+from scrapy import log
 from scrapy import signals
 from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware as _UserAgentMiddleware
 from random import choice
@@ -53,8 +53,9 @@ class UserAgentMiddleware(_UserAgentMiddleware):
         """
         从上面的user_agent_list 中随即选取设为默认User Agent
         """
-        User-Agent＝choice(user_agent_list) 
-
+        ua = choice(self.user_agent_list) 
+        print("*****************Current UserAgent:%s***************"%ua)
+        request.headers.setdefault('User-Agent',ua)
 
 class DoubanSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
