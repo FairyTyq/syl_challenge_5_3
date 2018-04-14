@@ -10,7 +10,7 @@ class AwesomeMovieSpider(CrawlSpider):
     start_urls = ['https://movie.douban.com/subject/3011091/']
 
     rules = (
-            Rule(LinkExtractor(allow='https://movie.douban.com/subject/\d*/?from=subject-page'), 
+            Rule(LinkExtractor(allow='https://movie.douban.com/subject/.*/?from=subject-page'), 
             callback='parse_page', 
             follow=True),
     )
@@ -24,11 +24,12 @@ class AwesomeMovieSpider(CrawlSpider):
         item = MovieItem()
         item['url'] = response.url
         item['name'] = response.xpath('//div[@id="wrapper"]/div[@id="content"]/h1/span/text()').extract()[0]
-        item['summary'] = response.xpath('//div[@id="link-report"]/span/text()').extract()
+        item['summary'] =' '.join(response.xpath('//div[@id="link-report"]/span/text()').extract())
         item['score'] = response.xpath('//strong[@class="ll rating_num"]/text()').extract()[0]
 
         return item
-
+    
+    #此处为何需要一个 parse_start_url方法来解析起始url
     def parse_start_url(self,response):
         yield self.parse_mov(response)
 

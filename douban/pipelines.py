@@ -6,10 +6,11 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import redis
 import json
-
+import re
 
 class DoubanPipeline(object):
     def process_item(self, item, spider):
+        item['summary'] = re.sub('\s+',' ',item['summary'])
         if float(item['score']) > 8.0:
             tmp_data = json.dumps(dict(item))
             self.redis.lpush("douban_movie:items",tmp_data)
